@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>DMD connect</title>
+      <link rel="icon" type="image/png" href="./icon.png">
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+     <link href="css/login.css" rel="stylesheet">
+    
+
+    </head>
+    <body>
+       <div container="class theme-showcase" role="main">
+                  {{{body}}}    
+     </div>
+         <script>var transEnd = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd'
+
+$(".step-1-container").bind(transEnd, function(el){ 
+  if(el.target == this) {
+    this.style.display = 'none';
+    $('.circle').removeClass('transition');
+  }
+});
+
+$(".input-add-on").bind(transEnd, function(el) {
+  if(el.target == this)
+    $('.step-2-container').css('display', 'none');
+});
+
+$('.step-1-container label').click(function() {
+  $('.circle').addClass('circle-2 transition');
+  $('label').each(function(i, el) {
+    if($(el).find('input').prop('checked'))
+      $(el).addClass('selected')
+    else
+      $(el).removeClass('selected')
+  });
+     
+});
+
+$('.add-on').click(function(e) {
+  $('.circle').addClass('circle-3');
+});
+
+$('.back').click(function() {
+  if($('.circle').hasClass('circle-3')) {
+    $('.circle').removeClass('circle-3')
+    $('.step-2-container').css('display', 'block');
+  } else {
+    $('.circle').removeClass('circle-2')
+    $('.step-1-container').css('display', 'block');
+  }                 
+});</script>
+    </body>
+</html>
