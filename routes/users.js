@@ -1,5 +1,5 @@
 
-exports.show = function (req, res, next) {
+/*exports.show = function (req, res, next) {
 	req.getConnection(function(err, connection){
 		if (err) 
 			return next(err);
@@ -40,7 +40,7 @@ exports.get = function(req, res, next){
                 var input = JSON.parse(JSON.stringify(req.body));
 		var name = {
             		username : input.username,
-                        uassword : input.password
+                        password : input.password
                     
         	};
 		connection.query('SELECT * FROM Users WHERE username = ?', [name], function(err,rows,results){
@@ -81,4 +81,16 @@ exports.delete = function(req, res, next){
 		});
 	});
 };
-
+*/
+exports.userCheck = function (req, res, next) {
+   
+    
+    console.log(req.path);
+    if (req.session.user){
+         next(); 
+    }
+    else{
+         res.redirect("/")
+    }
+   
+}

@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var bcrypt = require('bcrypt');
 var myConnection = require('express-myconnection');
-//var users = require('./routes/users');
+var users = require('./routes/users');
 
 var dbOptions = {
       host: 'localhost',
@@ -25,6 +25,8 @@ app.engine('handlebars', exphbs({defaultLayout: "main"}));
 app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+
 
 app.get("/sign_up", function(req, res){
 
@@ -75,26 +77,35 @@ app.get('/', function(req, res) {
 });
 
 
+
 app.post("/login", function(req, res, next) {
     var input = JSON.parse(JSON.stringify(req.body));
-
+   var username = input.username;
     req.getConnection(function(err, connection) {
         if (err)
-            return next(err);
+            return next(err)
 
-        connection.query('SELECT * from Users WHERE Username=?', [input.username], function(err, user) {
-            bcrypt.compare(input.password, hash, function(err, pass) {
-            console.log(user);
-            
+        connection.query('SELECT * from Users WHERE Username=?', [username], function(err, users) {
+	    
+	    console.log(input);
+            console.log(users);	    
+	    
+	    var user = users[0];
+	
+            bcrypt.compare(input.password, user.Password, function(err, pass) {
+            	
+		console.log(user);
+            	console.log(pass);
+
                 if (err) {
                     console.log(err);
                 }
                  
                 if (pass) {
-                    req.session.user = new User(input);
+                    req.session.user = username;
                     return res.redirect("/hi")
                 } else {
-                    return res.render('login');
+                    return res.redirect('/');
                 }
             })
         })
@@ -103,15 +114,15 @@ app.post("/login", function(req, res, next) {
 
 
 
-app.post('/logout', function(req, res, next) {
+/*app.post('/logout', function(req, res, next) {
 
     var msg = "logging out : " + req.session.user;
 
     delete req.session.user
     console.log(msg);
-    return res.redirect('login');
+    return res.redirect('/');
 
-});
+});*/
 
 /*app.use(function(req, res, next) {
     if (req.session.user) {
@@ -119,6 +130,7 @@ app.post('/logout', function(req, res, next) {
     }
     res.redirect('login');
 });*/
+app.use(users.userCheck);
 
 app.get('/hi', function(req, res) {
 	res.render('index');
@@ -133,10 +145,10 @@ app.get('/hi', function(req, res) {
 
 //app.post("/login",users.get);
  
-/*app.get('/logout', function(req, res){ 
+app.get('/logout', function(req, res){ 
      delete req.session.user
      res.redirect("/");	
-});*/
+});
 
 
 

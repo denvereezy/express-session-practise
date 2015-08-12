@@ -1,5 +1,5 @@
 
-exports.show = function (req, res, next) {
+/*exports.show = function (req, res, next) {
 	req.getConnection(function(err, connection){
 		if (err) 
 			return next(err);
@@ -14,38 +14,25 @@ exports.show = function (req, res, next) {
 };
 
 exports.add = function (req, res, next) {
-       var bcrypt = require('bcryt');
-	 req.getConnection(function(err, connection) {
-        if (err) {
-            return next(err);
-        }
-
-        var input = JSON.parse(JSON.stringify(req.body));
-        var data = {
-            Username: input.username,
-            Password: input.password
-
-        };
-
-        //bcrypt the password===
-        bcrypt.genSalt(10, function(err, salt) {
-            bcrypt.hash(input.password, salt, function(err, hash) {
-                // Store hash in your password DB. 
-                data.Password = hash;
-                connection.query('insert into Users set ?', data, function(err, results) {
-                    if (err)
-                        console.log("Error inserting : %s ", err);
-
-                    res.redirect('/', {
-                        msg: "Successfully signed up"
-                    });
-                });
-            });
-        });
-
-
- 
-    });
+	req.getConnection(function(err, connection){
+		if (err){ 
+			return next(err);
+		}
+		
+		var input = JSON.parse(JSON.stringify(req.body));
+		var data = {
+            		Username : input.username,
+                        Password : input.password
+                    
+        	};
+		connection.query('insert into Users set ?', data, function(err, results) {
+        		if (err){
+              			console.log("Error inserting : %s ",err );
+				return res.redirect("/error?error=" + err)
+         		}
+          		res.redirect('/');
+      		});
+	});
 };
 
 exports.get = function(req, res, next){
@@ -53,7 +40,7 @@ exports.get = function(req, res, next){
                 var input = JSON.parse(JSON.stringify(req.body));
 		var name = {
             		username : input.username,
-                        uassword : input.password
+                        password : input.password
                     
         	};
 		connection.query('SELECT * FROM Users WHERE username = ?', [name], function(err,rows,results){
@@ -94,4 +81,16 @@ exports.delete = function(req, res, next){
 		});
 	});
 };
-
+*/
+exports.userCheck = function (req, res, next) {
+   
+    
+    console.log(req.path);
+    if (req.session.user){
+         next(); 
+    }
+    else{
+         res.redirect("/login")
+    }
+   
+}
